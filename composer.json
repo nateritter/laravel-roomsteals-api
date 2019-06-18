@@ -11,7 +11,8 @@
     "homepage": "https://github.com/nateritter/laravelroomstealsapi",
     "keywords": ["Laravel", "LaravelRoomstealsApi"],
     "require": {
-        "illuminate/support": "~5"
+        "illuminate/support": "~5",
+        "guzzlehttp/guzzle": "^6.3"
     },
     "require-dev": {
         "phpunit/phpunit": "~7.0",
