@@ -18,6 +18,12 @@ class LaravelRoomstealsApi
     protected $member_uri = 'https://api.travsrv.com/MemberAPI.aspx';
 
     /**
+     * Deals API
+     * @var string
+     */
+    protected $deals_uri = 'https://api.travsrv.com/Content.aspx';
+
+    /**
      * RoomSteals portal
      * @var string
      */
@@ -108,8 +114,8 @@ class LaravelRoomstealsApi
         $user->FirstName = $params['first_name'] ?? '';
         $user->LastName = $params['last_name'] ?? '';
         $user->Email = $params['email'] ?? '';
-        $user->Address1 = $params['address'] ?? '';
-        $user->HomePhone = $params['home_phone'] ?? '';
+        // $user->Address1 = $params['address'] ?? '';
+        // $user->HomePhone = $params['home_phone'] ?? '';
 
         $memberData = new \stdClass();
         $memberData->Names = [$user];
@@ -224,5 +230,53 @@ class LaravelRoomstealsApi
         ];
 
         return array_merge($query, $credentials);
+    }
+
+    /**
+     * Get the locations with the best deals
+     * @return array
+     */
+    public function getDealsLocations(array $params = []) {
+        $params['type'] = 'findfeaturedlocationdeals';
+
+        $response = $this->client->request('GET', $this->deals_uri, [
+            'query' => $params
+        ]);
+
+        $json = json_decode((string) $response->getBody());
+
+        $this->stack[] = [
+            'function' => (! empty($function)) ? $function : __FUNCTION__,
+            'params' => $params,
+            'code' => $response->getStatusCode(),
+            'body' => $json,
+            'response' => $response,
+        ];
+
+        return end($this->stack);
+    }
+
+    /**
+     * Get the locations with the best deals
+     * @return array
+     */
+    public function getDealsHotels(array $params = []) {
+        $params['type'] = 'findfeaturedlocationdeals';
+
+        $response = $this->client->request('GET', $this->deals_uri, [
+            'query' => $params
+        ]);
+
+        $json = json_decode((string) $response->getBody());
+
+        $this->stack[] = [
+            'function' => (! empty($function)) ? $function : __FUNCTION__,
+            'params' => $params,
+            'code' => $response->getStatusCode(),
+            'body' => $json,
+            'response' => $response,
+        ];
+
+        return end($this->stack);
     }
 }
