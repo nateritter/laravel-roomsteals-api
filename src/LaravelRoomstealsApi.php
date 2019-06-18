@@ -49,8 +49,25 @@ class LaravelRoomstealsApi
      * Construtor
      */
     public function __construct() {
+        if (! $this->apiCredentialsExist()) {
+            throw new \Exception("RoomSteals API credentials do not exist in .env file");
+        }
         $this->client = new Client();
         $this->getAdminToken();
+    }
+
+    /**
+     * Checks if the API credentials are in the .env file
+     * @return boolean
+     */
+    private function apiCredentialsExist() {
+        if (empty(config('laravelroomstealsapi.roomsteals_api_username'))
+            || empty(config('laravelroomstealsapi.roomsteals_api_password'))
+            || empty(config('laravelroomstealsapi.roomsteals_api_site_admin_username'))
+        ) {
+           return false;
+        }
+        return true;
     }
 
     /**
