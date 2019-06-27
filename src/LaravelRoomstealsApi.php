@@ -114,6 +114,7 @@ class LaravelRoomstealsApi
         $user->FirstName = $params['first_name'] ?? '';
         $user->LastName = $params['last_name'] ?? '';
         $user->Email = $params['email'] ?? '';
+        $user->Referral = $params['partner'] ?? '';
         // $user->Address1 = $params['address'] ?? '';
         // $user->HomePhone = $params['home_phone'] ?? '';
 
