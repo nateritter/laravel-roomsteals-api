@@ -109,8 +109,11 @@ class LaravelRoomstealsApi
      * @return string
      */
     public function constructMemberObject(array $params = []) {
+        $full_name = $params['first_name'] ?? '';
+        $full_name .= $params['last_name'] ?? '';
+
         $user = new \stdClass();
-        $user->ReferralId = $params['email'] ?? '';
+        $user->ReferralId = $params['id'] ?? '';
         $user->FirstName = $params['first_name'] ?? '';
         $user->LastName = $params['last_name'] ?? '';
         $user->Email = $params['email'] ?? '';
@@ -121,6 +124,9 @@ class LaravelRoomstealsApi
         $memberData->Names = [$user];
         $additionalInfoData = new \stdClass();
         $additionalInfoData->partner = $params['partner'];
+        $additionalInfoData->id = $params['id'] ?? '';
+        $additionalInfoData->name = $full_name;
+        $additionalInfoData->email = $params['email'] ?? '';
         $memberData->AdditionalInfo = json_encode($additionalInfoData);
 
         return json_encode($memberData);
