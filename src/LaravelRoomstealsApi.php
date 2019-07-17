@@ -110,7 +110,7 @@ class LaravelRoomstealsApi
      */
     public function constructMemberObject(array $params = []) {
         $full_name = $params['first_name'] ?? '';
-        $full_name .= $params['last_name'] ?? '';
+        $full_name .= ' ' . $params['last_name'] ?? '';
 
         $user = new \stdClass();
         $user->ReferralId = $params['id'] ?? '';
