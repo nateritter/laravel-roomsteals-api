@@ -7,6 +7,14 @@ use GuzzleHttp\Client;
 class LaravelRoomstealsApi
 {
     /**
+     * TODO:
+     * - Break into different included classes: Members, Locations, Hotels, Deals, Portals, etc.
+     * - Add Location::get(), a method to get a normalized location id and name from a string.
+     * - Document the params that need to be sent through for each method to work properly.
+     * - Check for old dates or invalid data before taking the time to hit the server.
+     */
+
+    /**
      * Guzzle HTTP client
      */
     protected $client;
@@ -22,6 +30,12 @@ class LaravelRoomstealsApi
      * @var string
      */
     protected $deals_uri = 'https://api.travsrv.com/Content.aspx';
+
+    /**
+     * Hotels API
+     * @var string
+     */
+    protected $hotel_uri = 'https://api.travsrv.com/hotel.aspx';
 
     /**
      * RoomSteals portal
@@ -216,13 +230,16 @@ class LaravelRoomstealsApi
      * @param  array  $query
      * @return array
      */
-    private function mergeSiteAdminCredentials(array $query = []) {
+    private function mergeSiteAdminCredentials(array $query = [], $withToken = true) {
         $credentials = [
             'username' => config('laravelroomstealsapi.roomsteals_api_username'),
             'password' => config('laravelroomstealsapi.roomsteals_api_password'),
-            'token' => 'ARNUSER-'.config('laravelroomstealsapi.roomsteals_api_site_admin_username'),
             'siteid' => config('laravelroomstealsapi.roomsteals_api_site_id'),
         ];
+
+        if ($withToken) {
+            $credentials['token'] = 'ARNUSER-'.config('laravelroomstealsapi.roomsteals_api_site_admin_username');
+        }
 
         return array_merge($query, $credentials);
     }
@@ -273,6 +290,30 @@ class LaravelRoomstealsApi
         $params['type'] = 'findfeaturedlocationdeals';
 
         $response = $this->client->request('GET', $this->deals_uri, [
+            'query' => $params
+        ]);
+
+        $json = json_decode((string) $response->getBody());
+
+        $this->stack[] = [
+            'function' => (! empty($function)) ? $function : __FUNCTION__,
+            'params' => $params,
+            'code' => $response->getStatusCode(),
+            'body' => $json,
+            'response' => $response,
+        ];
+
+        return end($this->stack);
+    }
+
+    /**
+     * Get availability for a particular location and dates
+     * @return array
+     */
+    public function getAvailability(array $params = []) {
+        $params = $this->mergeSiteAdminCredentials($params, false);
+
+        $response = $this->client->request('GET', $this->hotel_uri, [
             'query' => $params
         ]);
 
