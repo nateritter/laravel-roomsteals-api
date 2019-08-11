@@ -313,9 +313,14 @@ class LaravelRoomstealsApi
     public function getAvailability(array $params = []) {
         $params = $this->mergeSiteAdminCredentials($params, false);
 
-        $response = $this->client->request('GET', $this->hotel_uri, [
-            'query' => $params
-        ]);
+        try {
+            $response = $this->client->request('GET', $this->hotel_uri, [
+                'query' => $params
+            ]);
+        } catch (Exception $e) {
+            // Example: `416 Requested Range Not Satisfiable` response:
+            // {"ArnResponse":{"Error":{"Type":"NoHotelsFoundException","Message":"No Hotels Found to satisfy your request."}}}
+        }
 
         $json = json_decode((string) $response->getBody());
 
