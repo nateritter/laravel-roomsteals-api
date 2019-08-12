@@ -156,7 +156,7 @@ class LaravelRoomstealsApi
 
         $response = $this->client->request('GET', $this->member_uri, ['query' => $this->query]);
 
-        $json = json_decode((string) $response->getBody());
+        $json = json_decode((string) $response->getBody(), true);
 
         if (isset($json->CurrentToken)) {
             $this->admin_token = urldecode($json->CurrentToken);
@@ -208,7 +208,7 @@ class LaravelRoomstealsApi
             'form_params' => $this->query
         ]);
 
-        $json = json_decode((string) $response->getBody());
+        $json = json_decode((string) $response->getBody(), true);
 
         if (isset($json->CurrentToken)) {
             $this->member_token = urldecode($json->CurrentToken);
@@ -269,7 +269,7 @@ class LaravelRoomstealsApi
             'query' => $params
         ]);
 
-        $json = json_decode((string) $response->getBody());
+        $json = json_decode((string) $response->getBody(), true);
 
         $this->stack[] = [
             'function' => (! empty($function)) ? $function : __FUNCTION__,
@@ -293,7 +293,7 @@ class LaravelRoomstealsApi
             'query' => $params
         ]);
 
-        $json = json_decode((string) $response->getBody());
+        $json = json_decode((string) $response->getBody(), true);
 
         $this->stack[] = [
             'function' => (! empty($function)) ? $function : __FUNCTION__,
@@ -322,7 +322,7 @@ class LaravelRoomstealsApi
             // {"ArnResponse":{"Error":{"Type":"NoHotelsFoundException","Message":"No Hotels Found to satisfy your request."}}}
         }
 
-        $json = json_decode((string) $response->getBody());
+        $json = json_decode((string) $response->getBody(), true);
 
         $this->stack[] = [
             'function' => (! empty($function)) ? $function : __FUNCTION__,
