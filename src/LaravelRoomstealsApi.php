@@ -158,8 +158,8 @@ class LaravelRoomstealsApi
 
         $json = json_decode((string) $response->getBody(), true);
 
-        if (isset($json->CurrentToken)) {
-            $this->admin_token = urldecode($json->CurrentToken);
+        if (isset($json['CurrentToken'])) {
+            $this->admin_token = urldecode($json['CurrentToken']);
         }
 
         $this->stack[] = [
@@ -210,8 +210,8 @@ class LaravelRoomstealsApi
 
         $json = json_decode((string) $response->getBody(), true);
 
-        if (isset($json->CurrentToken)) {
-            $this->member_token = urldecode($json->CurrentToken);
+        if (isset($json['CurrentToken'])) {
+            $this->member_token = urldecode($json['CurrentToken']);
         }
 
         $this->stack[] = [
