@@ -131,8 +131,15 @@ class LaravelRoomstealsApi
         $user->FirstName = $params['first_name'] ?? '';
         $user->LastName = $params['last_name'] ?? '';
         $user->Email = $params['email'] ?? '';
-        // $user->Address1 = $params['address'] ?? '';
-        // $user->HomePhone = $params['home_phone'] ?? '';
+
+        // Delete/Deactive or Reactivate a member if 'is_active' passed in (bool)
+        if (isset($params['is_active'])) {
+            if (empty($params['is_active'])) {
+                $user->DeleteMember = true;
+            } else {
+                $user->ReactivateMember = true;
+            }
+        }
 
         $memberData = new \stdClass();
         $memberData->Names = [$user];
