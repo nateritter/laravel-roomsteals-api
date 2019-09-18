@@ -114,6 +114,13 @@ class LaravelRoomstealsApi
     public function constructAndUpsertMember(array $params = []) {
         $memberData = $this->constructMemberObject($params);
 
+        // FIXME: This bit is required since ARN has a bug in it where
+        // AdditionalInfo isn't saved when created, only when updated
+        $decoded = json_decode($memberData);
+        if (! isset($decoded->AdditionalInfo) || empty($decoded->AdditionalInfo)) {
+            $memberData = $this->constructMemberObject($params);
+        }
+
         return $this->upsertMember(['memberData' => $memberData]);
     }
 
