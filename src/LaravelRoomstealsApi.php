@@ -129,7 +129,7 @@ class LaravelRoomstealsApi
      * @param  array  $params [description]
      * @return [type]         [description]
      */
-    private function deleteMember(array $params = []) {
+    public function deleteMember(array $params = []) {
         $params['is_active'] = false;
         $memberData = $this->constructMemberObject($params);
 
