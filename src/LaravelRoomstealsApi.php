@@ -163,7 +163,7 @@ class LaravelRoomstealsApi
         $memberData = new \stdClass();
         $memberData->Names = [$user];
         $additionalInfoData = new \stdClass();
-        $additionalInfoData->partner = $params['partner'];
+        $additionalInfoData->partner = $params['partner'] ?? '';
         $additionalInfoData->id = $params['id'] ?? '';
         $additionalInfoData->name = $full_name;
         $additionalInfoData->email = $params['email'] ?? '';
