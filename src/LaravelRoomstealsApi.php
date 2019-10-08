@@ -125,6 +125,18 @@ class LaravelRoomstealsApi
     }
 
     /**
+     * Delete/Deactive a member
+     * @param  array  $params [description]
+     * @return [type]         [description]
+     */
+    private function deleteMember(array $params = []) {
+        $params['is_active'] = false;
+        $memberData = $this->constructMemberObject($params);
+
+        return $this->upsertMember(['memberData' => $memberData]);
+    }
+
+    /**
      * Create a memberData object and then json_encode it
      * @param  array  $params
      * @return string
