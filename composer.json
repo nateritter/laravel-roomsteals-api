@@ -12,7 +12,7 @@
     "keywords": ["Laravel", "LaravelRoomstealsApi"],
     "require": {
         "guzzlehttp/guzzle": "^6.3",
-        "illuminate/support": "^6.7"
+        "illuminate/support": "7.*"
     },
     "require-dev": {
         "mockery/mockery": "^1.1",
