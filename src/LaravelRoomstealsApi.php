@@ -72,7 +72,8 @@ class LaravelRoomstealsApi
         if (! $this->apiCredentialsExist()) {
             throw new \Exception("RoomSteals API credentials do not exist in .env file");
         }
-        $this->client = new Client(['http_errors' => false]);
+        $this->client = new Client(['http_errors' => false, 'headers' => ['Accept-version' => config('laravelroomstealsapi.roomsteals_api_version')]]);
+        
         $this->getAdminToken();
     }
 
@@ -341,8 +342,7 @@ class LaravelRoomstealsApi
 
         try {
             $response = $this->client->request('GET', $this->hotel_uri, [
-                'query' => $params,
-                'headers' => ['Accept-version' => config('laravelroomstealsapi.roomsteals_api_version')],
+                'query' => $params
             ]);
         } catch (Exception $e) {
             // Example: `416 Requested Range Not Satisfiable` response:
