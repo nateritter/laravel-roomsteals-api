@@ -72,7 +72,8 @@ class LaravelRoomstealsApi
         if (! $this->apiCredentialsExist()) {
             throw new \Exception("RoomSteals API credentials do not exist in .env file");
         }
-        $this->client = new Client(['http_errors' => false]);
+        $this->client = new Client(['http_errors' => false, 'headers' => ['Accept-version' => config('laravelroomstealsapi.roomsteals_api_version')]]);
+        
         $this->getAdminToken();
     }
 
