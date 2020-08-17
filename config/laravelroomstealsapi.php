@@ -41,4 +41,14 @@ return [
     */
 
     'roomsteals_api_site_id' => env('ROOMSTEALS_API_SITE_ID', '52342'),
+
+    /*
+    |--------------------------------------------------------------------------
+    | API Version
+    |--------------------------------------------------------------------------
+    |
+    |
+    */
+
+    'roomsteals_api_version' => env('ROOMSTEALS_API_VERSION', '2'),
 ];

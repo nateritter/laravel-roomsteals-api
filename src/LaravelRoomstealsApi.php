@@ -341,7 +341,8 @@ class LaravelRoomstealsApi
 
         try {
             $response = $this->client->request('GET', $this->hotel_uri, [
-                'query' => $params
+                'query' => $params,
+                'headers' => ['Accept-version' => config('laravelroomstealsapi.roomsteals_api_version')],
             ]);
         } catch (Exception $e) {
             // Example: `416 Requested Range Not Satisfiable` response:
