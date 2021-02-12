@@ -68,9 +68,10 @@ class LaravelRoomstealsApi
     /**
      * Construtor
      */
-    public function __construct() {
+    public function __construct()
+    {
         if (! $this->apiCredentialsExist()) {
-            throw new \Exception("RoomSteals API credentials do not exist in .env file");
+            throw new \Exception('RoomSteals API credentials do not exist in .env file');
         }
         $this->client = new Client(['http_errors' => false, 'headers' => ['Accept-version' => config('laravelroomstealsapi.roomsteals_api_version')]]);
         
@@ -81,13 +82,15 @@ class LaravelRoomstealsApi
      * Checks if the API credentials are in the .env file
      * @return boolean
      */
-    private function apiCredentialsExist() {
+    private function apiCredentialsExist()
+    {
         if (empty(config('laravelroomstealsapi.roomsteals_api_username'))
             || empty(config('laravelroomstealsapi.roomsteals_api_password'))
             || empty(config('laravelroomstealsapi.roomsteals_api_site_admin_username'))
         ) {
-           return false;
+            return false;
         }
+
         return true;
     }
 
@@ -95,7 +98,8 @@ class LaravelRoomstealsApi
      * Get the current member's SSO URL to the portal
      * @return string
      */
-    public function getPortalUri() {
+    public function getPortalUri()
+    {
         return $this->constructPortalUri();
     }
 
@@ -103,8 +107,9 @@ class LaravelRoomstealsApi
      * Construct and return the current member's SSO URL to the portal
      * @return string
      */
-    public function constructPortalUri() {
-        return $this->portal_uri.'?memberToken='.urlencode($this->member_token);
+    public function constructPortalUri()
+    {
+        return $this->portal_uri . '?memberToken=' . urlencode($this->member_token);
     }
 
     /**
@@ -112,7 +117,8 @@ class LaravelRoomstealsApi
      * @param  array  $params [description]
      * @return [type]         [description]
      */
-    public function constructAndUpsertMember(array $params = []) {
+    public function constructAndUpsertMember(array $params = [])
+    {
         $memberData = $this->constructMemberObject($params);
 
         // FIXME: This bit is required since ARN has a bug in it where
@@ -130,7 +136,8 @@ class LaravelRoomstealsApi
      * @param  array  $params [description]
      * @return [type]         [description]
      */
-    public function deleteMember(array $params = []) {
+    public function deleteMember(array $params = [])
+    {
         $params['is_active'] = false;
         $memberData = $this->constructMemberObject($params);
 
@@ -142,7 +149,8 @@ class LaravelRoomstealsApi
      * @param  array  $params
      * @return string
      */
-    public function constructMemberObject(array $params = []) {
+    public function constructMemberObject(array $params = [])
+    {
         $full_name = $params['first_name'] ?? '';
         $full_name .= ' ' . $params['last_name'] ?? '';
 
@@ -163,6 +171,11 @@ class LaravelRoomstealsApi
 
         $memberData = new \stdClass();
         $memberData->Names = [$user];
+
+        if (isset($params['points'])) {
+            $memberData->Points = $params['points'];
+        }
+
         $additionalInfoData = new \stdClass();
         $additionalInfoData->partner = $params['partner'] ?? '';
         $additionalInfoData->id = $params['id'] ?? '';
@@ -178,7 +191,8 @@ class LaravelRoomstealsApi
      * @param  array  $params
      * @return array
      */
-    public function getAdminToken(array $params = []) {
+    public function getAdminToken(array $params = [])
+    {
         $this->query = $this->mergeSiteAdminCredentials($params);
 
         $response = $this->client->request('GET', $this->member_uri, ['query' => $this->query]);
@@ -205,7 +219,8 @@ class LaravelRoomstealsApi
      * @param  array  $params
      * @return array
      */
-    public function createMember(array $params = []) {
+    public function createMember(array $params = [])
+    {
         extract($this->upsertMember($params), __FUNCTION__);
 
         return end($this->stack);
@@ -216,7 +231,8 @@ class LaravelRoomstealsApi
      * @param  array  $params
      * @return array
      */
-    public function updateMember(array $params = []) {
+    public function updateMember(array $params = [])
+    {
         extract($this->upsertMember($params), __FUNCTION__);
 
         return end($this->stack);
@@ -228,11 +244,12 @@ class LaravelRoomstealsApi
      * @param  mixed  $function Name of function calling this one, or null by default
      * @return array
      */
-    private function upsertMember(array $params = [], $function = null) {
+    private function upsertMember(array $params = [], $function = null)
+    {
         $this->query = $this->mergeSiteAdminToken($params);
 
         $response = $this->client->request('POST', $this->member_uri, [
-            'form_params' => $this->query
+            'form_params' => $this->query,
         ]);
 
         $json = json_decode((string) $response->getBody(), true);
@@ -257,7 +274,8 @@ class LaravelRoomstealsApi
      * @param  array  $query
      * @return array
      */
-    private function mergeSiteAdminCredentials(array $query = [], $withToken = true) {
+    private function mergeSiteAdminCredentials(array $query = [], $withToken = true)
+    {
         $credentials = [
             'username' => config('laravelroomstealsapi.roomsteals_api_username'),
             'password' => config('laravelroomstealsapi.roomsteals_api_password'),
@@ -265,7 +283,7 @@ class LaravelRoomstealsApi
         ];
 
         if ($withToken) {
-            $credentials['token'] = 'ARNUSER-'.config('laravelroomstealsapi.roomsteals_api_site_admin_username');
+            $credentials['token'] = 'ARNUSER-' . config('laravelroomstealsapi.roomsteals_api_site_admin_username');
         }
 
         return array_merge($query, $credentials);
@@ -276,7 +294,8 @@ class LaravelRoomstealsApi
      * @param  array  $query
      * @return array
      */
-    private function mergeSiteAdminToken(array $query = []) {
+    private function mergeSiteAdminToken(array $query = [])
+    {
         $credentials = [
             'token' => $this->admin_token,
             'siteid' => config('laravelroomstealsapi.roomsteals_api_site_id'),
@@ -289,11 +308,12 @@ class LaravelRoomstealsApi
      * Get the locations with the best deals
      * @return array
      */
-    public function getDealsLocations(array $params = []) {
+    public function getDealsLocations(array $params = [])
+    {
         $params['type'] = 'findfeaturedlocationdeals';
 
         $response = $this->client->request('GET', $this->deals_uri, [
-            'query' => $params
+            'query' => $params,
         ]);
 
         $json = json_decode((string) $response->getBody(), true);
@@ -313,11 +333,12 @@ class LaravelRoomstealsApi
      * Get the locations with the best deals
      * @return array
      */
-    public function getDealsHotels(array $params = []) {
+    public function getDealsHotels(array $params = [])
+    {
         $params['type'] = 'findfeaturedlocationdeals';
 
         $response = $this->client->request('GET', $this->deals_uri, [
-            'query' => $params
+            'query' => $params,
         ]);
 
         $json = json_decode((string) $response->getBody(), true);
@@ -337,12 +358,13 @@ class LaravelRoomstealsApi
      * Get availability for a particular location and dates
      * @return array
      */
-    public function getAvailability(array $params = []) {
+    public function getAvailability(array $params = [])
+    {
         $params = $this->mergeSiteAdminCredentials($params, false);
 
         try {
             $response = $this->client->request('GET', $this->hotel_uri, [
-                'query' => $params
+                'query' => $params,
             ]);
         } catch (Exception $e) {
             // Example: `416 Requested Range Not Satisfiable` response:
