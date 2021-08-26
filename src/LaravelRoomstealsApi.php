@@ -3,6 +3,7 @@
 namespace NateRitter\LaravelRoomstealsApi;
 
 use GuzzleHttp\Client;
+use Illuminate\Support\Facades\Log;
 
 class LaravelRoomstealsApi
 {
@@ -74,7 +75,7 @@ class LaravelRoomstealsApi
             throw new \Exception('RoomSteals API credentials do not exist in .env file');
         }
         $this->client = new Client(['http_errors' => false, 'headers' => ['Accept-version' => config('laravelroomstealsapi.roomsteals_api_version')]]);
-        
+
         $this->getAdminToken();
     }
 
@@ -82,7 +83,7 @@ class LaravelRoomstealsApi
      * Checks if the API credentials are in the .env file
      * @return boolean
      */
-    private function apiCredentialsExist()
+    private function apiCredentialsExist(): bool
     {
         if (empty(config('laravelroomstealsapi.roomsteals_api_username'))
             || empty(config('laravelroomstealsapi.roomsteals_api_password'))
@@ -95,10 +96,34 @@ class LaravelRoomstealsApi
     }
 
     /**
+     * Checks if there are any IDs to ban.
+     *
+     * @return  boolean
+     */
+    private function bannedIpsExist(): bool
+    {
+        if (empty(config('laravelroomstealsapi.roomsteals_banned_ids'))) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Gets the banned IDs as an array
+     *
+     * @return  array
+     */
+    private function getBannedIds(): array
+    {
+        return config('laravelroomstealsapi.roomsteals_banned_ids');
+    }
+
+    /**
      * Get the current member's SSO URL to the portal
      * @return string
      */
-    public function getPortalUri()
+    public function getPortalUri(): string
     {
         return $this->constructPortalUri();
     }
@@ -107,14 +132,14 @@ class LaravelRoomstealsApi
      * Construct and return the current member's SSO URL to the portal
      * @return string
      */
-    public function constructPortalUri()
+    public function constructPortalUri(): string
     {
         return $this->portal_uri . '?memberToken=' . urlencode($this->member_token);
     }
 
     /**
      * Construct and upsert a member
-     * @param  array  $params [description]
+     * @param  array  $params The params to upsert the member with.
      * @return [type]         [description]
      */
     public function constructAndUpsertMember(array $params = [])
@@ -133,7 +158,7 @@ class LaravelRoomstealsApi
 
     /**
      * Delete/Deactive a member
-     * @param  array  $params [description]
+     * @param  array  $params The params used to delete the member.
      * @return [type]         [description]
      */
     public function deleteMember(array $params = [])
@@ -149,7 +174,7 @@ class LaravelRoomstealsApi
      * @param  array  $params
      * @return string
      */
-    public function constructMemberObject(array $params = [])
+    public function constructMemberObject(array $params = []): string
     {
         $full_name = $params['first_name'] ?? '';
         $full_name .= ' ' . $params['last_name'] ?? '';
@@ -211,6 +236,8 @@ class LaravelRoomstealsApi
             'response' => $response,
         ];
 
+        Log::info('RoomSteals API: ' . __FUNCTION__, $this->stack);
+
         return end($this->stack);
     }
 
@@ -265,6 +292,8 @@ class LaravelRoomstealsApi
             'body' => $json,
             'response' => $response,
         ];
+
+        Log::info('RoomSteals API: ' . __FUNCTION__, $this->stack);
 
         return end($this->stack);
     }
@@ -326,6 +355,8 @@ class LaravelRoomstealsApi
             'response' => $response,
         ];
 
+        Log::info('RoomSteals API: ' . __FUNCTION__, $this->stack);
+
         return end($this->stack);
     }
 
@@ -350,6 +381,8 @@ class LaravelRoomstealsApi
             'body' => $json,
             'response' => $response,
         ];
+
+        Log::info('RoomSteals API: ' . __FUNCTION__, $this->stack);
 
         return end($this->stack);
     }
@@ -380,6 +413,8 @@ class LaravelRoomstealsApi
             'body' => $json,
             'response' => $response,
         ];
+
+        Log::info('RoomSteals API: ' . __FUNCTION__, $this->stack);
 
         return end($this->stack);
     }

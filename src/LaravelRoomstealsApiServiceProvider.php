@@ -35,7 +35,7 @@ class LaravelRoomstealsApiServiceProvider extends ServiceProvider
 
         // Register the service the package provides.
         $this->app->singleton('laravelroomstealsapi', function ($app) {
-            return new LaravelRoomstealsApi;
+            return new LaravelRoomstealsApi();
         });
     }
 
@@ -48,7 +48,7 @@ class LaravelRoomstealsApiServiceProvider extends ServiceProvider
     {
         return ['laravelroomstealsapi'];
     }
-    
+
     /**
      * Console-specific booting.
      *
