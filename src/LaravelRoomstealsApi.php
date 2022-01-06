@@ -71,7 +71,7 @@ class LaravelRoomstealsApi
      */
     public function __construct()
     {
-        if (! $this->apiCredentialsExist()) {
+        if (!$this->apiCredentialsExist()) {
             throw new \Exception('RoomSteals API credentials do not exist in .env file');
         }
         $this->client = new Client(['http_errors' => false, 'headers' => ['Accept-version' => config('laravelroomstealsapi.roomsteals_api_version')]]);
@@ -85,7 +85,8 @@ class LaravelRoomstealsApi
      */
     private function apiCredentialsExist(): bool
     {
-        if (empty(config('laravelroomstealsapi.roomsteals_api_username'))
+        if (
+            empty(config('laravelroomstealsapi.roomsteals_api_username'))
             || empty(config('laravelroomstealsapi.roomsteals_api_password'))
             || empty(config('laravelroomstealsapi.roomsteals_api_site_admin_username'))
         ) {
@@ -149,7 +150,7 @@ class LaravelRoomstealsApi
         // FIXME: This bit is required since ARN has a bug in it where
         // AdditionalInfo isn't saved when created, only when updated
         $decoded = json_decode($memberData);
-        if (! isset($decoded->AdditionalInfo) || empty($decoded->AdditionalInfo)) {
+        if (!isset($decoded->AdditionalInfo) || empty($decoded->AdditionalInfo)) {
             $memberData = $this->constructMemberObject($params);
         }
 
@@ -236,7 +237,7 @@ class LaravelRoomstealsApi
             'response' => $response,
         ];
 
-        Log::info('RoomSteals API: ' . __FUNCTION__, $this->stack);
+        // Log::info('RoomSteals API: ' . __FUNCTION__, $this->stack);
 
         return end($this->stack);
     }
@@ -286,14 +287,14 @@ class LaravelRoomstealsApi
         }
 
         $this->stack[] = [
-            'function' => (! empty($function)) ? $function : __FUNCTION__,
+            'function' => (!empty($function)) ? $function : __FUNCTION__,
             'params' => $params,
             'code' => $response->getStatusCode(),
             'body' => $json,
             'response' => $response,
         ];
 
-        Log::info('RoomSteals API: ' . __FUNCTION__, $this->stack);
+        // Log::info('RoomSteals API: ' . __FUNCTION__, $this->stack);
 
         return end($this->stack);
     }
@@ -348,14 +349,14 @@ class LaravelRoomstealsApi
         $json = json_decode((string) $response->getBody(), true);
 
         $this->stack[] = [
-            'function' => (! empty($function)) ? $function : __FUNCTION__,
+            'function' => (!empty($function)) ? $function : __FUNCTION__,
             'params' => $params,
             'code' => $response->getStatusCode(),
             'body' => $json,
             'response' => $response,
         ];
 
-        Log::info('RoomSteals API: ' . __FUNCTION__, $this->stack);
+        // Log::info('RoomSteals API: ' . __FUNCTION__, $this->stack);
 
         return end($this->stack);
     }
@@ -375,14 +376,14 @@ class LaravelRoomstealsApi
         $json = json_decode((string) $response->getBody(), true);
 
         $this->stack[] = [
-            'function' => (! empty($function)) ? $function : __FUNCTION__,
+            'function' => (!empty($function)) ? $function : __FUNCTION__,
             'params' => $params,
             'code' => $response->getStatusCode(),
             'body' => $json,
             'response' => $response,
         ];
 
-        Log::info('RoomSteals API: ' . __FUNCTION__, $this->stack);
+        // Log::info('RoomSteals API: ' . __FUNCTION__, $this->stack);
 
         return end($this->stack);
     }
@@ -407,14 +408,14 @@ class LaravelRoomstealsApi
         $json = json_decode((string) $response->getBody(), true);
 
         $this->stack[] = [
-            'function' => (! empty($function)) ? $function : __FUNCTION__,
+            'function' => (!empty($function)) ? $function : __FUNCTION__,
             'params' => $params,
             'code' => $response->getStatusCode(),
             'body' => $json,
             'response' => $response,
         ];
 
-        Log::info('RoomSteals API: ' . __FUNCTION__, $this->stack);
+        // Log::info('RoomSteals API: ' . __FUNCTION__, $this->stack);
 
         return end($this->stack);
     }
